@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import useAuthStore from './store/authStore';
 import Layout from './components/Layout';
@@ -8,16 +9,22 @@ import Projects from './pages/Projects';
 import ProjectBoard from './pages/ProjectBoard';
 
 function ProtectedRoute({ children }) {
-  const { token } = useAuthStore();
-  return token ? children : <Navigate to="/login" replace />;
+  const { user } = useAuthStore();
+  return user ? children : <Navigate to="/login" replace />;
 }
 
 function GuestRoute({ children }) {
-  const { token } = useAuthStore();
-  return !token ? children : <Navigate to="/" replace />;
+  const { user } = useAuthStore();
+  return !user ? children : <Navigate to="/" replace />;
 }
 
 export default function App() {
+  const init = useAuthStore((s) => s.init);
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
   return (
     <BrowserRouter>
       <Routes>
