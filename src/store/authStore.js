@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import api from '../lib/api';
+import api from '../services/api';
 
 const useAuthStore = create((set) => ({
   user: JSON.parse(localStorage.getItem('user') || 'null'),
