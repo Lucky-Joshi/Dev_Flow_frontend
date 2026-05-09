@@ -1,67 +1,39 @@
 import { create } from 'zustand';
-import supabase from '../lib/supabase';
 import API from '../services/api';
 
+const TOKEN_KEY = 'devflow_token';
+const USER_KEY  = 'devflow_user';
+
 const useAuthStore = create((set) => ({
-  user: null,
+  user:    JSON.parse(localStorage.getItem(USER_KEY) || 'null'),
+  token:   localStorage.getItem(TOKEN_KEY) || null,
   loading: false,
-  error: null,
+  error:   null,
 
-  // Call once on app mount to restore session
-  init: async () => {
-    const { data } = await supabase.auth.getSession();
-    if (data?.session?.user) {
-      const u = data.session.user;
-      set({ user: { id: u.id, email: u.email, name: u.user_metadata?.name } });
-    }
-
-    // Keep store in sync when Supabase session changes
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        const u = session.user;
-        set({ user: { id: u.id, email: u.email, name: u.user_metadata?.name } });
-      } else {
-        set({ user: null });
-      }
-    });
+  init: () => {
+    // Session already restored from localStorage above — nothing async needed.
+    // If token is present, API interceptor will attach it automatically.
   },
 
   login: async (email, password) => {
     set({ loading: true, error: null });
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw new Error(error.message);
-      const u = data.user;
-      set({ user: { id: u.id, email: u.email, name: u.user_metadata?.name }, loading: false });
+      const { data } = await API.post('/auth/login', { email, password });
+      localStorage.setItem(TOKEN_KEY, data.token);
+      localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+      set({ user: data.user, token: data.token, loading: false });
       return true;
     } catch (err) {
-      console.error('[Auth] Login failed:', err.message);
-      set({ error: err.message || 'Login failed', loading: false });
+      const msg = err.response?.data?.error || 'Invalid credentials';
+      set({ error: msg, loading: false });
       return false;
     }
   },
 
-  signup: async (name, email, password) => {
-    set({ loading: true, error: null });
-    try {
-      // Hit our backend which creates the Supabase user + DB profile
-      await API.post('/auth/signup', { name, email, password });
-      // Auto sign in after signup
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw new Error(error.message);
-      const u = data.user;
-      set({ user: { id: u.id, email: u.email, name: u.user_metadata?.name }, loading: false });
-      return true;
-    } catch (err) {
-      console.error('[Auth] Signup failed:', err.message);
-      set({ error: err.response?.data?.error || err.message || 'Signup failed', loading: false });
-      return false;
-    }
-  },
-
-  logout: async () => {
-    await supabase.auth.signOut();
-    set({ user: null });
+  logout: () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    set({ user: null, token: null });
   },
 
   clearError: () => set({ error: null }),
