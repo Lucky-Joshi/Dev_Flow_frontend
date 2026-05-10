@@ -16,9 +16,9 @@ export default function Settings() {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto animate-fade-in space-y-4">
+    <div className="p-3 sm:p-4 md:p-6 max-w-2xl mx-auto animate-fade-in space-y-3 md:space-y-4">
       <div className="mb-2">
-        <h1 className="text-xl font-bold text-white">Settings</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Settings</h1>
         <p className="text-xs text-gray-600 mt-0.5">Manage your workspace preferences</p>
       </div>
 
@@ -37,8 +37,8 @@ export default function Settings() {
             <label className="text-xs text-gray-500 mb-1.5 block">Email</label>
             <input className="input opacity-60 cursor-not-allowed" value={user?.email ?? ''} disabled />
           </div>
-          <div className="flex items-center gap-3">
-            <button type="submit" className="btn-primary">Save Changes</button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <button type="submit" className="btn-primary w-full sm:w-auto">Save Changes</button>
             {saved && <span className="text-xs text-emerald-400">Saved!</span>}
           </div>
         </form>
@@ -50,12 +50,12 @@ export default function Settings() {
           <Palette size={15} className="text-accent" />
           <h2 className="text-sm font-semibold text-white">Appearance</h2>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <p className="text-sm text-white">Theme</p>
             <p className="text-xs text-gray-600 mt-0.5">Dark mode is always on — built for focus</p>
           </div>
-          <div className="px-3 py-1.5 bg-surface-3 rounded-lg text-xs text-gray-400">Dark</div>
+          <div className="px-3 py-1.5 bg-surface-3 rounded-lg text-xs text-gray-400 flex-shrink-0">Dark</div>
         </div>
       </motion.div>
 
@@ -65,12 +65,12 @@ export default function Settings() {
           <Shield size={15} className="text-accent" />
           <h2 className="text-sm font-semibold text-white">Account</h2>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <p className="text-sm text-white">Sign out</p>
             <p className="text-xs text-gray-600 mt-0.5">End your current session</p>
           </div>
-          <button onClick={logout} className="btn-danger flex items-center gap-2">
+          <button onClick={logout} className="btn-danger flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
             <LogOut size={13} /> Sign out
           </button>
         </div>

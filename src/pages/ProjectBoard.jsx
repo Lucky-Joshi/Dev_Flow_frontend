@@ -74,24 +74,24 @@ export default function ProjectBoard() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-border flex-shrink-0 glass">
-        <div className="flex items-center gap-2 text-sm">
-          <Link to="/projects" className="text-gray-600 hover:text-white transition-colors">Projects</Link>
-          <ChevronRight size={14} className="text-gray-700" />
-          <span className="text-white font-medium">{currentProject?.name ?? '...'}</span>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-3 sm:px-6 py-3 sm:py-4 border-b border-border flex-shrink-0 glass">
+        <div className="flex items-center gap-2 text-xs sm:text-sm overflow-x-auto">
+          <Link to="/projects" className="text-gray-600 hover:text-white transition-colors whitespace-nowrap">Projects</Link>
+          <ChevronRight size={14} className="text-gray-700 flex-shrink-0" />
+          <span className="text-white font-medium truncate">{currentProject?.name ?? '...'}</span>
         </div>
-        <button onClick={() => openAddTask()} className="btn-primary flex items-center gap-2">
+        <button onClick={() => openAddTask()} className="btn-primary flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
           <Plus size={14} /> Add Task
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 px-6 py-2 border-b border-border flex-shrink-0">
+      <div className="flex items-center gap-1 px-3 sm:px-6 py-2 border-b border-border flex-shrink-0 overflow-x-auto">
         {TABS.map(({ id: tid, label, icon: Icon }) => (
           <button
             key={tid}
             onClick={() => setActiveTab(tid)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
               activeTab === tid
                 ? 'bg-accent/10 text-accent border border-accent/20'
                 : 'text-gray-500 hover:text-white hover:bg-surface-3'
@@ -104,7 +104,7 @@ export default function ProjectBoard() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
         <AnimatePresence mode="wait">
           {activeTab === 'board' && (
             <motion.div key="board" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
@@ -113,8 +113,8 @@ export default function ProjectBoard() {
           )}
 
           {activeTab === 'analytics' && (
-            <motion.div key="analytics" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4 max-w-4xl">
-              <div className="grid grid-cols-3 gap-4">
+            <motion.div key="analytics" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3 md:space-y-4 max-w-5xl">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                 {[
                   { label: 'Total Tasks', value: tasks.length, color: 'text-white' },
                   { label: 'Completed',   value: tasks.filter((t) => t.status === 'DONE').length, color: 'text-emerald-400' },
@@ -122,23 +122,25 @@ export default function ProjectBoard() {
                 ].map(({ label, value, color }) => (
                   <div key={label} className="card text-center">
                     <p className="text-xs text-gray-600 mb-1">{label}</p>
-                    <p className={`text-3xl font-bold ${color}`}>{value}</p>
+                    <p className={`text-2xl sm:text-3xl font-bold ${color}`}>{value}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
                 <div className="card">
                   <h3 className="text-sm font-semibold text-white mb-4">By Status</h3>
-                  <ResponsiveContainer width="100%" height={160}>
-                    <BarChart data={statusCounts} margin={{ left: -20 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" vertical={false} />
-                      <XAxis dataKey="status" tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="w-full h-40 sm:h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={statusCounts} margin={{ left: -20 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" vertical={false} />
+                        <XAxis dataKey="status" tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
 
                 <div className="card">
@@ -171,15 +173,15 @@ export default function ProjectBoard() {
           )}
 
           {activeTab === 'notes' && (
-            <motion.div key="notes" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-3xl">
+            <motion.div key="notes" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-4xl">
               <div className="card">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
                   <h3 className="text-sm font-semibold text-white">Project Notes</h3>
                   <span className="text-xs text-gray-600">Auto-saved locally</span>
                 </div>
                 <textarea
                   className="input resize-none font-mono text-xs leading-relaxed"
-                  rows={20}
+                  rows={16}
                   placeholder="Write your project notes, ideas, or documentation here..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -205,7 +207,7 @@ export default function ProjectBoard() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onSubmit={handleCreateTask}
-              className="bg-surface-1 border border-border rounded-2xl w-full max-w-md p-6 shadow-card-hover"
+              className="bg-surface-1 border border-border rounded-2xl w-full max-w-md p-4 sm:p-6 shadow-card-hover"
             >
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-white font-semibold">New Task</h2>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Bell, LogOut, Search } from 'lucide-react';
+import { Bell, LogOut, Search, Menu } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
 const PAGE_TITLES = {
@@ -11,7 +11,7 @@ const PAGE_TITLES = {
   '/settings': 'Settings',
 };
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
   const { user, logout } = useAuthStore();
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
@@ -21,17 +21,25 @@ export default function Navbar() {
   )?.[1] ?? 'DevFlow';
 
   return (
-    <header className="h-14 glass border-b border-border flex items-center justify-between px-6 flex-shrink-0 z-10">
-      <h2 className="text-sm font-semibold text-white">{title}</h2>
+    <header className="h-14 glass border-b border-border flex items-center justify-between px-3 md:px-6 flex-shrink-0 z-10">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg hover:bg-surface-3 transition-colors"
+      >
+        <Menu size={18} className="text-gray-400" />
+      </button>
+
+      <h2 className="text-sm font-semibold text-white flex-1 md:flex-none text-center md:text-left">{title}</h2>
 
       <div className="flex items-center gap-2">
         {/* User menu */}
         <div className="relative">
           <button
             onClick={() => setShowMenu((s) => !s)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-surface-3 transition-colors"
+            className="flex items-center gap-2 px-2 md:px-3 py-1.5 rounded-lg hover:bg-surface-3 transition-colors"
           >
-            <div className="w-6 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0">
               <span className="text-accent text-xs font-bold">
                 {user?.name?.[0]?.toUpperCase() ?? 'U'}
               </span>

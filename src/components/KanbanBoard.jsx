@@ -41,7 +41,7 @@ export default function KanbanBoard({ projectId, onAddTask }) {
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 h-full pb-4">
+      <div className="flex gap-3 md:gap-4 h-full pb-4 overflow-x-auto snap-x snap-mandatory">
         {COLUMNS.map((col, ci) => {
           const colTasks = getColumnTasks(col.id);
           return (
@@ -50,19 +50,19 @@ export default function KanbanBoard({ projectId, onAddTask }) {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: ci * 0.06 }}
-              className={`flex flex-col bg-surface-1 rounded-xl border ${col.glow} min-w-[280px] flex-1 max-w-sm`}
+              className={`flex flex-col bg-surface-1 rounded-xl border ${col.glow} min-w-[280px] sm:min-w-[300px] flex-1 max-w-sm snap-center`}
             >
               {/* Column header */}
-              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border flex-shrink-0">
+              <div className="flex items-center gap-2.5 px-3 md:px-4 py-3 border-b border-border flex-shrink-0">
                 <span className={`w-2 h-2 rounded-full ${col.color}`} />
-                <span className="text-sm font-medium text-white">{col.label}</span>
-                <span className="ml-auto text-xs text-gray-600 bg-surface-3 px-2 py-0.5 rounded-full tabular-nums">
+                <span className="text-sm font-medium text-white truncate">{col.label}</span>
+                <span className="ml-auto text-xs text-gray-600 bg-surface-3 px-2 py-0.5 rounded-full tabular-nums flex-shrink-0">
                   {colTasks.length}
                 </span>
                 {onAddTask && (
                   <button
                     onClick={() => onAddTask(col.id)}
-                    className="w-5 h-5 rounded flex items-center justify-center text-gray-600 hover:text-white hover:bg-surface-3 transition-colors"
+                    className="w-5 h-5 rounded flex items-center justify-center text-gray-600 hover:text-white hover:bg-surface-3 transition-colors flex-shrink-0"
                   >
                     <Plus size={12} />
                   </button>
@@ -71,7 +71,7 @@ export default function KanbanBoard({ projectId, onAddTask }) {
 
               {/* Tasks */}
               <SortableContext id={col.id} items={colTasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-                <div className="flex-1 p-3 space-y-2 overflow-y-auto min-h-[120px]">
+                <div className="flex-1 p-2 md:p-3 space-y-2 overflow-y-auto min-h-[120px]">
                   {colTasks.map((task) => (
                     <TaskCard key={task.id} task={task} onUpdate={updateTask} onDelete={deleteTask} />
                   ))}

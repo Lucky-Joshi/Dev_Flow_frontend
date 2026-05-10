@@ -60,46 +60,48 @@ export default function Analytics() {
   ].filter((d) => d.value > 0);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6 animate-fade-in">
+    <div className="p-3 sm:p-4 md:p-6 max-w-7xl mx-auto space-y-4 md:space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-xl font-bold text-white">Analytics</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Analytics</h1>
         <p className="text-xs text-gray-600 mt-0.5">Your productivity overview</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <StatCard icon={FolderKanban} label="Projects"   value={stats?.totalProjects ?? 0} gradient="bg-blue-500"    delay={0} />
         <StatCard icon={CheckCircle2} label="Completed"  value={stats?.completedTasks ?? 0} gradient="bg-emerald-500" delay={0.05} />
         <StatCard icon={AlertCircle}  label="Due Today"  value={stats?.dueTodayTasks ?? 0}  gradient="bg-amber-500"   delay={0.1} />
         <StatCard icon={TrendingUp}   label="Rate"       value={`${completionRate}%`}        gradient="bg-purple-500"  delay={0.15} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
         {/* Weekly area chart */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card lg:col-span-2">
           <h3 className="text-sm font-semibold text-white mb-1">Weekly Trend</h3>
           <p className="text-xs text-gray-600 mb-4">Tasks completed vs created</p>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={weeklyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="completedGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="createdGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" vertical={false} />
-              <XAxis dataKey="day" tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="completed" stroke="#6366f1" strokeWidth={2} fill="url(#completedGrad)" dot={false} />
-              <Area type="monotone" dataKey="created" stroke="#10b981" strokeWidth={2} fill="url(#createdGrad)" dot={false} />
-            </AreaChart>
-          </ResponsiveContainer>
-          <div className="flex items-center gap-4 mt-2">
+          <div className="w-full h-40 sm:h-48 md:h-56">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={weeklyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="completedGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="createdGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" vertical={false} />
+                <XAxis dataKey="day" tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="completed" stroke="#6366f1" strokeWidth={2} fill="url(#completedGrad)" dot={false} />
+                <Area type="monotone" dataKey="created" stroke="#10b981" strokeWidth={2} fill="url(#createdGrad)" dot={false} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex items-center gap-4 mt-2 flex-wrap">
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
               <div className="w-3 h-0.5 bg-accent rounded" /> Completed
             </div>
@@ -114,13 +116,15 @@ export default function Analytics() {
           <h3 className="text-sm font-semibold text-white mb-4">Task Distribution</h3>
           {pieData.length > 0 ? (
             <>
-              <ResponsiveContainer width="100%" height={140}>
-                <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={40} outerRadius={60} paddingAngle={3} dataKey="value">
-                    {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="w-full h-40">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={30} outerRadius={50} paddingAngle={3} dataKey="value">
+                      {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
               <div className="space-y-2 mt-2">
                 {pieData.map((d, i) => (
                   <div key={d.name} className="flex items-center justify-between text-xs">
@@ -145,15 +149,17 @@ export default function Analytics() {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card">
         <h3 className="text-sm font-semibold text-white mb-1">Monthly Output</h3>
         <p className="text-xs text-gray-600 mb-4">Tasks completed per month</p>
-        <ResponsiveContainer width="100%" height={160}>
-          <BarChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" vertical={false} />
-            <XAxis dataKey="month" tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="tasks" fill="#6366f1" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="w-full h-40 sm:h-48">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e2433" vertical={false} />
+              <XAxis dataKey="month" tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#4b5563', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="tasks" fill="#6366f1" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </motion.div>
     </div>
   );

@@ -42,13 +42,13 @@ export default function Projects() {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-3 sm:p-4 md:p-6 max-w-7xl mx-auto animate-fade-in">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
         <div>
-          <h1 className="text-xl font-bold text-white">Projects</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">Projects</h1>
           <p className="text-xs text-gray-600 mt-0.5">{projects.length} workspace{projects.length !== 1 ? 's' : ''}</p>
         </div>
-        <button onClick={() => setShowForm(true)} className="btn-primary flex items-center gap-2">
+        <button onClick={() => setShowForm(true)} className="btn-primary flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
           <Plus size={14} /> New Project
         </button>
       </div>
@@ -68,7 +68,7 @@ export default function Projects() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onSubmit={handleCreate}
-              className="bg-surface-1 border border-border rounded-2xl w-full max-w-md p-6 shadow-card-hover"
+              className="bg-surface-1 border border-border rounded-2xl w-full max-w-md p-4 sm:p-6 shadow-card-hover"
             >
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-white font-semibold">New Project</h2>
@@ -118,7 +118,7 @@ export default function Projects() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {projects.map((project, i) => {
             const grad = PROJECT_COLORS[i % PROJECT_COLORS.length];
             const dot = DOT_COLORS[i % DOT_COLORS.length];
@@ -150,7 +150,7 @@ export default function Projects() {
                     </span>
                   </div>
 
-                  <h3 className="text-white font-semibold mb-1 group-hover:text-accent transition-colors pr-8">
+                  <h3 className="text-white font-semibold mb-1 group-hover:text-accent transition-colors pr-8 line-clamp-2">
                     {project.name}
                   </h3>
 

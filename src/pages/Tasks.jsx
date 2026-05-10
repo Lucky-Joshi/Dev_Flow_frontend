@@ -46,18 +46,18 @@ export default function Tasks() {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-3 sm:p-4 md:p-6 max-w-6xl mx-auto animate-fade-in">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6">
         <div>
-          <h1 className="text-xl font-bold text-white">All Tasks</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">All Tasks</h1>
           <p className="text-xs text-gray-600 mt-0.5">{allTasks.length} tasks across all projects</p>
         </div>
-        <div className="flex items-center gap-1 bg-surface-2 rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-surface-2 rounded-lg p-1 w-full sm:w-auto overflow-x-auto">
           {['ALL', 'TODO', 'DOING', 'DONE'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+              className={`px-2 sm:px-3 py-1 rounded-md text-xs font-medium transition-all whitespace-nowrap ${
                 filter === f ? 'bg-accent text-white' : 'text-gray-500 hover:text-white'
               }`}
             >
@@ -86,10 +86,10 @@ export default function Tasks() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
                 onClick={() => setSelectedTask(task)}
-                className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-surface-2 transition-colors cursor-pointer group border border-transparent hover:border-border"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 px-3 sm:px-4 py-3 rounded-xl hover:bg-surface-2 transition-colors cursor-pointer group border border-transparent hover:border-border"
               >
-                <StatusIcon size={15} className={s.color} />
-                <div className="flex-1 min-w-0">
+                <StatusIcon size={15} className={`${s.color} flex-shrink-0`} />
+                <div className="flex-1 min-w-0 w-full">
                   <p className={`text-sm font-medium ${task.status === 'DONE' ? 'line-through text-gray-600' : 'text-white'}`}>
                     {task.title}
                   </p>
@@ -97,7 +97,7 @@ export default function Tasks() {
                     <p className="text-xs text-gray-600 mt-0.5">{task.project.name}</p>
                   )}
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto flex-wrap">
                   {task.deadline && (
                     <span className={`text-xs ${isOverdue ? 'text-red-400' : 'text-gray-600'}`}>
                       {new Date(task.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

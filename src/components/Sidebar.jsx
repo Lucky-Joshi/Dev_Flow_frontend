@@ -18,13 +18,17 @@ const BOTTOM_NAV = [
   { label: 'Settings', icon: Settings, to: '/settings' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const { user } = useAuthStore();
 
   const isActive = (to) =>
     to === '/' ? location.pathname === '/' : location.pathname.startsWith(to);
+
+  const handleNavClick = () => {
+    if (onClose) onClose();
+  };
 
   return (
     <motion.aside
@@ -58,6 +62,7 @@ export default function Sidebar() {
           <Link
             key={to}
             to={to}
+            onClick={handleNavClick}
             title={collapsed ? label : undefined}
             className={isActive(to) ? 'nav-item-active' : 'nav-item'}
           >
@@ -82,7 +87,7 @@ export default function Sidebar() {
       {/* Bottom */}
       <div className="px-2 pb-3 space-y-0.5 border-t border-border pt-3">
         {BOTTOM_NAV.map(({ label, icon: Icon, to }) => (
-          <Link key={to} to={to} title={collapsed ? label : undefined} className="nav-item">
+          <Link key={to} to={to} onClick={handleNavClick} title={collapsed ? label : undefined} className="nav-item">
             <Icon size={16} className="flex-shrink-0" />
             <AnimatePresence>
               {!collapsed && (
@@ -111,12 +116,12 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Collapse toggle */}
+      {/* Collapse toggle - hidden on mobile */}
       <button
         onClick={() => setCollapsed((c) => !c)}
         className="absolute -right-3 top-[52px] w-6 h-6 rounded-full bg-surface-3 border border-border
                    flex items-center justify-center text-gray-500 hover:text-white hover:bg-surface-4
-                   transition-all duration-200 z-10"
+                   transition-all duration-200 z-10 hidden md:flex"
       >
         {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
       </button>
