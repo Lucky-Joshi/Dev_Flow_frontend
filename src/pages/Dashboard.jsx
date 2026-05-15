@@ -43,6 +43,7 @@ export default function Dashboard() {
   const { user } = useAuthStore();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [weeklyData, setWeeklyData] = useState([]);
 
   useEffect(() => {
@@ -50,7 +51,11 @@ export default function Dashboard() {
       setStats(data);
       setWeeklyData(buildWeeklyData(data));
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch((err) => {
+      console.error('[Dashboard] Failed to fetch:', err.response?.data || err.message);
+      setError(err.response?.data?.error || 'Failed to load dashboard data');
+      setLoading(false);
+    });
   }, []);
 
   const greeting = () => {
@@ -62,6 +67,21 @@ export default function Dashboard() {
 
   if (loading) {
     return <div className="flex items-center justify-center h-full"><Spinner size="lg" /></div>;
+  }
+
+  if (error && !stats) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4 p-6 text-center">
+        <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center">
+          <AlertCircle size={22} className="text-red-400" />
+        </div>
+        <p className="text-white font-medium">Could not load dashboard</p>
+        <p className="text-sm text-gray-600 max-w-xs">{error}</p>
+        <button onClick={() => window.location.reload()} className="btn-primary">
+          Retry
+        </button>
+      </div>
+    );
   }
 
   const completionRate = stats?.totalTasks
